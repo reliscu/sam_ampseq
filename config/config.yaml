@@ -1,4 +1,4 @@
 qscore: 30
 max_read_depth: 999999999
 min_base_qual: 30
-var_file: "/home/rebecca/workflows/exploring_tools/ampseq_preprocess/snakemake/Second_batch_amplicons/Variants_list/variants.txt"
+var_file: "variants.txt"

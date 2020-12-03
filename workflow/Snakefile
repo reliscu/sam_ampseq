@@ -1,59 +1,59 @@
 configfile: "config.yaml"
 
-ref,=glob_wildcards("data/{reference_file}.fasta")
-sample,=glob_wildcards("data/samples/{sample_id}_R1_001.fastq")
+ref_genome,=glob_wildcards("../resources/ref_genome/{reference_genome}.fasta")
+sample,=glob_wildcards("../resources/samples/{sample_id}_R1_001.fastq")
 
-shell("bwa index data/{ref}.fasta")
+shell("bwa index ../resources/ref_genome/{ref_genome}.fasta")
 
 rule all:
  input:
-  expand("data/varscan_output/varscan.txt")
+  expand("../results/varscan_output/varscan_readcounts.txt")
 
 rule bwa_map:
  input:
-  r1="data/samples/{sample}_R1_001.fastq",
-  r2="data/samples/{sample}_R2_001.fastq"
+  r1="../resources/samples/{sample}_R1_001.fastq",
+  r2="../resources/samples/{sample}_R2_001.fastq"
  output: 
-  "data/mapped_reads/{sample}.bam"
+  "../results/mapped_reads/{sample}.bam"
  shell:
-  "bwa mem data/{ref}.fasta {input.r1} {input.r2} | samtools view -Sb -o {output}"
+  "bwa mem ../resources/{ref}.fasta {input.r1} {input.r2} | samtools view -Sb -o {output}"
 
 rule samtools_sort:
  input: 
-  "data/mapped_reads/{sample}.bam"
+  "../results/mapped_reads/{sample}.bam"
  output: 
-  "data/sorted_reads/{sample}.bam"
+  "../results/sorted_reads/{sample}.bam"
  shell:
   "samtools sort {input} > {output}"
 
 rule samtools_index:
  input:
-  "data/sorted_reads/{sample}.bam"
+  "../results/sorted_reads/{sample}.bam"
  output:
-  "data/sorted_reads/{sample}.bam.bai"
+  "../results/sorted_reads/{sample}.bam.bai"
  shell:
   "samtools index {input}"
 
 rule samtools_mpileup:
  input:
-  bam=expand("data/sorted_reads/{sample}.bam",sample=sample),
-  bai=expand("data/sorted_reads/{sample}.bam.bai",sample=sample)
+  bam=expand("../results/sorted_reads/{sample}.bam",sample=sample),
+  bai=expand("../results/sorted_reads/{sample}.bam.bai",sample=sample)
  output:
-  "data/mpileup/combined.mpileup"
+  "../results/mpileup/combined.mpileup"
  params:
   max_read_depth=lambda wc: config['max_read_depth'],
   qscore=lambda wc: config['qscore']
  shell:
-  "samtools mpileup -A -d {params.max_read_depth} -Q {params.qscore} -f data/{ref}.fasta {input.bam} > {output}"
+  "samtools mpileup -A -d {params.max_read_depth} -Q {params.qscore} -f resources/{ref}.fasta {input.bam} > {output}"
 
 rule varscan:
  input:
-  "data/mpileup/combined.mpileup"
+  "../results/mpileup/combined.mpileup"
  output:
-  "data/varscan_output/varscan.txt"
+  "../results/varscan_output/varscan_readcounts.txt"
  params:
   var_file=lambda wc: config['var_file'],
   min_base_qual=lambda wc: config['min_base_qual']
  shell:
-  "varscan readcounts {input} --variants-file {params.var_file} --min-base-qual {params.min_base_qual} --output-file {output}"
+  "varscan readcounts {input} --variants-file ../resources/{params.var_file} --min-base-qual {params.min_base_qual} --output-file {output}"
 
