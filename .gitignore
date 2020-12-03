@@ -1,4 +1,6 @@
 *.fastq
+.snakemake*
+*fasta.*
 
 # History files
 .Rhistory
