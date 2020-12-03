@@ -1,0 +1,25 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	all
+	70	bwa_map
+	70	samtools_index
+	1	samtools_mpileup
+	70	samtools_sort
+	1	varscan
+	213
+
+[Thu Dec  3 15:32:57 2020]
+rule bwa_map:
+    input: ../resources/samples/31_S69_L001_R1_001.fastq, ../resources/samples/31_S69_L001_R2_001.fastq
+    output: ../results/mapped_reads/31_S69_L001.bam
+    jobid: 20
+    wildcards: sample=31_S69_L001
+
+RuleException in line 12 of /home/rebecca/workflows/sam_ampseq/workflow/Snakefile:
+NameError: The name 'ref' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}
+  File "/home/shared/miniconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 131, in run_jobs
+  File "/home/shared/miniconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 140, in run
+  File "/home/shared/miniconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 151, in _run
+  File "/home/shared/miniconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 171, in printjob
+  File "/home/shared/miniconda3/envs/snakemake/lib/python3.9/site-packages/snakemake/executors/__init__.py", line 157, in printjob

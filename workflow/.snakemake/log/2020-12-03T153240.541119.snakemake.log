@@ -1,0 +1,3 @@
+WorkflowError in line 1 of /home/rebecca/workflows/sam_ampseq/workflow/Snakefile:
+Config file config.yaml not found.
+  File "/home/rebecca/workflows/sam_ampseq/workflow/Snakefile", line 1, in <module>

@@ -1,4 +1,4 @@
-configfile: "config.yaml"
+configfile: "../config/config.yaml"
 
 ref_genome,=glob_wildcards("../resources/ref_genome/{reference_genome}.fasta")
 sample,=glob_wildcards("../resources/samples/{sample_id}_R1_001.fastq")
@@ -16,7 +16,7 @@ rule bwa_map:
  output: 
   "../results/mapped_reads/{sample}.bam"
  shell:
-  "bwa mem ../resources/{ref}.fasta {input.r1} {input.r2} | samtools view -Sb -o {output}"
+  "bwa mem ../resources/{ref_genome}.fasta {input.r1} {input.r2} | samtools view -Sb -o {output}"
 
 rule samtools_sort:
  input: 
@@ -44,7 +44,7 @@ rule samtools_mpileup:
   max_read_depth=lambda wc: config['max_read_depth'],
   qscore=lambda wc: config['qscore']
  shell:
-  "samtools mpileup -A -d {params.max_read_depth} -Q {params.qscore} -f resources/{ref}.fasta {input.bam} > {output}"
+  "samtools mpileup -A -d {params.max_read_depth} -Q {params.qscore} -f resources/{ref_genome}.fasta {input.bam} > {output}"
 
 rule varscan:
  input:
