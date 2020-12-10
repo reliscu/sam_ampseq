@@ -11,12 +11,12 @@ rule all:
 
 rule bwa_map:
  input:
-  r1="../resources/samples/{sample}_R1_001.fastq",
-  r2="../resources/samples/{sample}_R2_001.fastq"
+  read1="../resources/samples/{sample}_R1_001.fastq",
+  read2="../resources/samples/{sample}_R2_001.fastq"
  output: 
   "../results/mapped_reads/{sample}.bam"
  shell:
-  "bwa mem ../resources/{ref_genome}.fasta {input.r1} {input.r2} | samtools view -Sb -o {output}"
+  "bwa mem ../resources/{ref_genome}.fasta {input.read1} {input.read2} | samtools view -Sb -o {output}"
 
 rule samtools_sort:
  input: 
